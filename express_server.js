@@ -4,7 +4,7 @@ const PORT = 8080;
 const bodyParser = require('body-parser');
 
 app.set('view engine', 'ejs');
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.urlencoded({extended: true}));
 
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -13,12 +13,13 @@ const urlDatabase = {
 
 //generate short url
 function generateRandomString() {
-  const alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+  const alphanumeric = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
   let randomString = [];
   
   for (let i = 0; i < 6; i++) {
-    let index = Math.floor(Math.random() * 24);
-    randomString.push(alphabet[index]);
+
+    let char = alphanumeric[Math.floor(Math.random() * 34)];
+    randomString.push(char);
   };
   return randomString.join('');
 };
