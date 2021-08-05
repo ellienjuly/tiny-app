@@ -4,19 +4,27 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <a class="nav-item nav-link" href="/urls">My URLs</a>
-        <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
-      </div>
-    </div>
+
     <% if (user_id) { %>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-item nav-link" href="/urls">My URLs</a>
+          <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
+        </div>
+      </div>
       <form action="/logout" method="POST">
+        Logged In As: <%= email %> 
         <a href="/urls"><button type="submit" class="btn btn-outline-dark">Logout</button></a>
       </form>
     <% } else { %>
-          <a href="/login"><button type="submit" class="btn btn-outline-dark">Login</button></a>
-          <a href="/register"><button type="submit" class="btn btn-outline-dark">Register</button></a>
-    <% } %>  
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <a class="nav-item nav-link" href="/urls">My URLs</a>
+          </div>
+        </div>
+        <a href="/login"><button type="submit" class="btn btn-outline-dark">Login</button></a>
+        <a href="/register"><button type="submit" class="btn btn-outline-dark">Register</button></a>
+    <% } %>
+
   </nav>
 </header>
