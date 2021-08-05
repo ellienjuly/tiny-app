@@ -1,4 +1,4 @@
-const authentication = (users, email, password) => {
+const authentication = (users, email) => {
   let id = '';
   for (let user_id in users) {
     if (users[user_id].email === email) {
@@ -7,9 +7,8 @@ const authentication = (users, email, password) => {
   };
 
   const user = users[id];
-
   if (user) {
-    if (user.password === password) {
+    if (user.email === email) {
       console.log('found');
       return user;
     } else {
@@ -23,11 +22,13 @@ const authentication = (users, email, password) => {
 }
 
 const createNewUser = (users, userObject) => {
-  if (!users[userObject.user_id]) {
+  for (const user in users) {
+    if (users[user].email === userObject.email) {
+      return null;
+    } 
     users[userObject.user_id] = userObject;
     return userObject;
   }
-  return null;
 }
 
 const findUser = (users, user_id) => {
@@ -36,4 +37,14 @@ const findUser = (users, user_id) => {
   return user;
 }
 
-module.exports = { authentication, createNewUser, findUser };
+const urlsForUser = function (id, database) {
+  let urls = {};
+  for (let url in database) {
+    if (database[url].user_id === id) {
+      urls[url] = database[url].longURL;
+    }
+  }
+  return urls;
+}
+
+module.exports = { authentication, createNewUser, findUser, urlsForUser};
