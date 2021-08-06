@@ -68,6 +68,7 @@ app.get('/urls', (req, res) => {
   };
   if (req.session.user_id) {
     res.render('urls_index', templateVars);
+    return;
   } 
   return res.status(401).send('<html><title></title><body><h3>Login to see the url list you created. <a href="/login">Login</a></body></html>');
 });
@@ -87,19 +88,18 @@ app.get('/urls/new', (req, res) => {
   }
   if (req.session.user_id) {
     res.render('urls_new', templateVars);
+    return;
   }
   res.redirect('/login');
 });
 
 app.post('/urls', (req, res) => {
-  console.log(req.body);
   const longURL = req.body.longURL;
   const shortURL = generateRandomString();
   urlDatabase[shortURL] = {
     longURL: longURL,
     user_id: req.session.user_id
   };
-  console.log('after', urlDatabase);
 
   res.redirect(`/urls/${shortURL}`);
 });
@@ -126,7 +126,7 @@ app.get('/urls/:id', (req, res) => {
     return res.status(401).send('<html><title></title><body><h3>Please log in to see this information <a href="/login">Login</a></body></html>');
   }
 
-  res.render('urls_show', templateVars);
+  return res.render('urls_show', templateVars);
 });
 
 app.get('/u/:id', (req, res) => {
@@ -146,7 +146,7 @@ app.post('/urls/:id', (req, res) => {
   const id = req.params.id;
   for (const url in urlDatabase) {
     if (urlDatabase[url].user_id === req.session.user_id){
-      res.redirect(`/urls/${id}`);
+      return res.redirect(`/urls/${id}`);
     }
   }
   res.redirect('/urls')
@@ -158,8 +158,7 @@ app.post('/urls/:id/delete', (req, res) => {
   for (const shortURL in urlDatabase) {
     if (urlDatabase[shortURL].user_id === req.session.user_id) {
       delete urlDatabase[del];
-      res.redirect(`/urls`);
-      return;
+      return res.redirect(`/urls`);
     }
   }
   return res.status(401).send('<html><title></title><body><h3>Please log in to delete this information <a href="/login">Login</a></body></html>');
@@ -196,18 +195,16 @@ app.post('/login', (req, res) => {
   const { email, password } = req.body;
 
   const user = authentication(users, email);
-  console.log("user", user);
 
   if (!user) {
-    res.status(400).send('<html><title></title><body><h3>This user does not exist.</body></html>');
-    return;
+    return res.status(400).send('<html><title></title><body><h3>This user does not exist.</body></html>');
+
   }
 
   const match = bcrypt.compareSync(password, user.password);
 
   if (!match) {
-    res.status(400).send('<html><title></title><body><h3>Incorrect login information</body></html>');
-    return;
+    return res.status(400).send('<html><title></title><body><h3>Incorrect login information</body></html>');
   }
   req.session.user_id = user.user_id;
 
@@ -235,7 +232,6 @@ app.post('/register', (req, res) => {
   } else {
     return res.status(400).send('<html><title></title><body><h3>This email already exists.</body></html>')
   }
-   console.log('Current user list', users);
 
   res.redirect('urls');
 });
@@ -252,13 +248,9 @@ app.post('/urls/:shortURL/edit', (req, res) => {
   const newURL = req.body.newURL;
 
   for (const url in urlDatabase) {
-    console.log('url: ',url);
     if (urlDatabase[url].user_id === req.session.user_id) {
-
       urlDatabase[shortURL].longURL = newURL;
-      console.log(urlDatabase);
-      res.redirect('/urls');
-      return;
+      return res.redirect('/urls');
     }
   }
   res.status(401).send('<html><title></title><body><h3>Cannot edit this url</body></html>')
