@@ -3,7 +3,7 @@ const authentication = (users, email) => {
   for (let user_id in users) {
     if (users[user_id].email === email) {
       id = user_id;
-    }
+    } 
   };
 
   const user = users[id];
@@ -21,13 +21,12 @@ const authentication = (users, email) => {
   }
 }
 
-const createNewUser = (users, userObject) => {
-  for (const user in users) {
-    if (users[user].email === userObject.email) {
-      return null;
-    } 
-    users[userObject.user_id] = userObject;
-    return userObject;
+const getUserByEmail = function (email, users) {
+  const usersArr = Object.values(users);
+  for (const user of usersArr) {
+    if (user.email === email) {
+      return user;
+    }
   }
 }
 
@@ -47,4 +46,4 @@ const urlsForUser = function (id, database) {
   return urls;
 }
 
-module.exports = { authentication, createNewUser, findUser, urlsForUser};
+module.exports = { authentication, findUser, urlsForUser, getUserByEmail };
